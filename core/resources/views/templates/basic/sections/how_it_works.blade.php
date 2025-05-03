@@ -1,0 +1,57 @@
+@php
+    $works = getContent('how_it_works.element', false, null, true);
+    $workCaption = getContent('how_it_works.content',true);
+@endphp
+
+@if($works)
+ <!-- 
+    ===============================================
+                   HOW IT WORK SECTION
+    ===============================================
+    -->
+          <div
+            class="col-12"
+            data-aos="fade-up"
+            data-aos-offset="200"
+            data-aos-duration="1000"
+          >
+            <div class="card-intro">
+              <div class="heading">
+                <h1>{{__(@$workCaption->data_values->heading)}}</h1>
+              </div>
+            </div>
+          </div>
+          <div
+            class="col-12"
+            data-aos="fade-up"
+            data-aos-offset="200"
+            data-aos-duration="1000"
+          >
+            <div class="row g-3">
+            @foreach($works as $k => $data)
+              <div class="col-md-6">
+                <div class="custom-card">
+                  <div class="card-img">
+                    <img src="{{getImage('assets/images/frontend/how_it_works/' . @$data->data_values->feature_image, '400x400')}}" width="200"
+                      height="auto" alt="@lang('step'.$k++)">
+                  </div>
+                  <div class="card-heading">
+                    <h4>{{__(@$data->data_values->title)}}</h4>
+                  </div>
+                  <div class="card-desc">
+                    <p>
+                     {{__(@$data->data_values->description)}}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              @endforeach
+            </div>
+          </div>
+          <!-- 
+    ===============================================
+                   HOW IT WORK SECTION ENDS
+    ===============================================
+    -->
+@endif
+

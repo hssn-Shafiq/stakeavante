@@ -1,0 +1,209 @@
+{
+    "banner": {
+        "builder": true,
+        "no_selection": true,
+        "name": "Banner Section",
+        "content": {
+            "images":{
+                "background_image":{
+                    "size": "1184x1472"
+                }
+            },
+            "heading": "text",
+            "subheading": "text",
+            "description": "text",
+            "left_button": "text",
+            "left_button_link": "text",
+            "right_button": "text",
+            "right_button_link": "text"
+        }
+    },
+
+    "about": {
+        "builder": true,
+        "name": "About Us",
+        "content": {
+            "images":{
+                "background_image":{
+                    "size": "800x530"
+                }
+            },
+            "heading": "text",
+            "subheading": "text",
+            "video_link": "text",
+            "description": "textarea-nic",
+            "left_button": "text",
+            "left_button_link": "text",
+            "right_button": "text",
+            "right_button_link": "text"
+        },
+        "element": {
+            "icon": "icon",
+            "paragraph": "text",
+            "modal": true
+        }
+    },
+
+    "participation": {
+        "builder": true,
+        "name": "Participation",
+        "content": {
+            "heading": "text"
+        },
+        "element": {
+            "icon": "icon",
+            "title": "text",
+            "description": "textarea",
+            "button": "text",
+            "button_link": "text",
+            "modal": true
+        }
+    },
+      "how_it_works": {
+        "builder": true,
+        "name": "How It Works",
+        "content": {
+            "heading": "text"
+        },
+        "element": {
+            "images":{
+                "feature_image":{
+                    "size": "400x400",
+                    "thumb": "50x50"
+                }
+            },
+            "title": "text",
+            "description": "textarea-nic",
+            "modal": false
+        }
+    },
+      "why_we_are": {
+        "builder": true,
+        "name": "Why we are",
+        "content": {
+            "heading": "text"
+        },
+        "element": {
+            "images":{
+                "feature_image":{
+                    "size": "400x400",
+                    "thumb": "50x50"
+                }
+            },
+            "title": "text",
+            "description": "textarea-nic",
+            "modal": false
+        }
+    },
+    "testimonial": {
+        "builder": true,
+        "name": "Testimonial Section",
+        "content": {
+            "heading": "text"
+        },
+        "element": {
+            "images":{
+                "logo_image":{
+                    "size": "400x400",
+                    "thumb": "50x50"
+                }
+            },
+            "name": "text",
+            "title": "text",
+            "description": "textarea",
+            "modal": false
+        }
+    },
+    "counter": {
+        "builder": true,
+        "name": "Counter Section",
+        "content": {
+            "heading": "text",
+            "description": "text"
+        },
+        "element": {
+            "title": "text",
+            "counter_digit": "text",
+            "modal": true
+        }
+    },
+
+    "faq": {
+        "builder": true,
+        "name": "FAQ Section",
+        "content": {
+            "heading": "text",
+            "subheading": "text",
+            "description": "text"
+        },
+        "element": {
+            "question": "text",
+            "answer": "textarea",
+            "modal": false
+        }
+    },
+
+    "client": {
+        "builder": true,
+        "name": "Client Section",
+        "content": {
+            "heading": "text",
+            "description": "text"
+        },
+        "element": {
+            "images":{
+                "client_image":{
+                    "size": "700x450",
+                    "thumb": "400x224"
+                }
+            },
+            "title": "text",
+            "description": "textarea-nic",
+            "modal": false
+        }
+    },
+
+    "social_icon": {
+        "builder": true,
+        "no_selection": true,
+        "name": "Social Icons",
+        "element": {
+            "title": "text",
+            "social_icon": "icon",
+            "url": "text",
+            "modal": true
+        }
+    },
+
+    "contact_us": {
+        "builder": true,
+        "no_selection": true,
+        "name": "Contact Us",
+        "content": {
+            "title": "text",
+            "short_details": "text",
+            "email_address": "text",
+            "contact_details": "text",
+            "contact_number": "text"
+        }
+    },
+
+    "footer_section": {
+        "builder": true,
+        "no_selection": true,
+        "name": "Footer Section",
+        "content": {
+            "website_footer": "text",
+            "copyright": "text"
+
+        }
+    },
+    "notice": {
+        "builder": true,
+        "no_selection": true,
+        "name": "User Notice",
+        "content": {
+            "description": "textarea"
+        }
+    }
+}
