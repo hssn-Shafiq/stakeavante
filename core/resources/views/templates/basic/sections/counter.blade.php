@@ -25,7 +25,7 @@
                  @foreach($counters as $counter)
                   <li class="border-bottom py-5">
                     <div class="value">
-                      <span class="count">{{_(@$counter->data_values->counter_digit) }}</span>
+                      <span class="count">{{__(@$counter->data_values->counter_digit) }}</span>
                     </div>
                     <div class="description">{{__(@$counter->data_values->title)}}</div>
                   </li>
