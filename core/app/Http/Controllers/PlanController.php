@@ -13,23 +13,29 @@ use Carbon\Carbon;
 
 class PlanController extends Controller
 {
-
     public function __construct()
     {
         $this->activeTemplate = activeTemplate();
     }
-    function planIndex()
+
+    public function planIndex()
     {
         $data['page_title'] = "Plans";
-        $data['plans'] = Plan::where('status',1)->where('is_default',1)->get();
+        $data['plans'] = Plan::where('status', 1)->where('is_default', 1)->get();
         $data['memberships'] = Membership::all();
         return view($this->activeTemplate . '.user.plan', $data);
     }
-    function planStore(Request $request)
+
+    public function planStore(Request $request)
     {
-        $this->validate($request, ['plan_id' => 'required|integer']);
+        $this->validate($request, [
+            'plan_id' => 'required|integer',
+            'mplan' => 'required|in:1,2,3,24', // Validate new plan durations
+            'membership' => 'required|exists:memberships,id',
+        ]);
+
         $plan = Plan::where('id', $request->plan_id)->where('status', 1)->where('is_default', 1)->firstOrFail();
-        $membership = Membership::where('id',$request->membership)->firstOrFail();
+        $membership = Membership::where('id', $request->membership)->firstOrFail();
         $gnl = GeneralSetting::first();
 
         $user = User::find(Auth::id());
@@ -38,205 +44,175 @@ class PlanController extends Controller
             return back()->withNotify($notify);
         }
         if ($plan->min_price > $membership->price) {
-            $notify[] = ['error', 'Minimum '.$plan->min_price.$gnl->cur_text.' amount is required'];
+            $notify[] = ['error', 'Minimum ' . $plan->min_price . $gnl->cur_text . ' amount is required'];
             return back()->withNotify($notify);
         }
 
-            $oldPlan = $user->plan_id;
-            $user->plan_id = $plan->id;
-            if($request->mplan==1){
-                $expiry =Carbon::now()->addMonth(24);
+        // Set expiry based on mplan
+        $expiry = match ($request->mplan) {
+            '1' => Carbon::now()->addMonth(1),
+            '2' => Carbon::now()->addMonths(2),
+            '3' => Carbon::now()->addMonths(3),
+            '24' => Carbon::now()->addMonths(24),
+            default => null, // Fallback, though validation ensures this won't happen
+        };
+
+        $oldPlan = $user->plan_id;
+        $user->plan_id = $plan->id;
+        $user->plan_type = $request->mplan;
+        $user->plan_expiry = $expiry;
+        $user->membership_id = $membership->id;
+        $user->balance -= $membership->price;
+        $user->total_invest += $membership->price;
+        $user->save();
+
+        $trx = $user->transactions()->create([
+            'amount' => $membership->price,
+            'trx_type' => '-',
+            'details' => 'Purchased ' . $plan->name . ' plan with membership ' . $membership->name,
+            'remark' => 'purchased_plan',
+            'trx' => getTrx(),
+            'post_balance' => getAmount($user->balance),
+        ]);
+
+        notify($user, 'plan_purchased', [
+            'plan' => $plan->name,
+            'amount' => getAmount($membership->price),
+            'currency' => $gnl->cur_text,
+            'trx' => $trx->trx,
+            'post_balance' => getAmount($user->balance) . ' ' . $gnl->cur_text,
+        ]);
+
+        // Referral commission
+        if ($user->added_by > 0) {
+            $amount = ceil($membership->price * $plan->ref_com / 100);
+            treeComission($user->id, $amount, 'plan_purchase');
+        }
+
+        // Total sale for levels 1 to 7
+        for ($level = 1; $level <= 7; $level++) {
+            if ($user->{"level{$level}_parent"} > 0) {
+                treeSale($user->id, $membership->price, $level, 'plan_purchase');
             }
-            $user->plan_type = $request->mplan;
-            $user->plan_expiry = $expiry;
-            $user->membership_id = $membership->id;
-            $user->balance -= $membership->price;
-            $user->total_invest += $membership->price;
-            $user->save();
+        }
 
-            $trx = $user->transactions()->create([
-                'amount' => $membership->price,
-                'trx_type' => '-',
-                'details' => 'Purchased ' . $plan->name.' plan with membership '.$membership->name,
-                'remark' => 'purchased_plan',
-                'trx' => getTrx(),
-                'post_balance' => getAmount($user->balance),
-            ]);
-
-            notify($user, 'plan_purchased', [
-                'plan' => $plan->name,
-                'amount' => getAmount($membership->price),
-                'currency' => $gnl->cur_text,
-                'trx' => $trx->trx,
-                'post_balance' => getAmount($user->balance) . ' ' . $gnl->cur_text,
-            ]);
-            usleep(50000);
-            //for referral comission
-            if($user->added_by > 0){
-                $amount = ceil($membership->price*$plan->ref_com/100);
-                treeComission($user->id,$amount,'plan_purchase');
-            }
-            usleep(50000);
-            //for total sale
-                //Level 1
-                if($user->level1_parent > 0){
-                treeSale($user->id,$membership->price,1,'plan_purchase');
-                }
-            usleep(50000);
-                //Level 2
-                if($user->level2_parent > 0){
-                treeSale($user->id,$membership->price,2,'plan_purchase');
-                }
-            usleep(50000);
-                //Level 3
-                if($user->level3_parent > 0){
-                treeSale($user->id,$membership->price,3,'plan_purchase');
-                }
-            usleep(50000);
-                //Level 4
-                if($user->level4_parent > 0){
-                treeSale($user->id,$membership->price,4,'plan_purchase');
-                }
-            usleep(50000);
-                //Level 5
-                if($user->level5_parent > 0){
-                treeSale($user->id,$membership->price,5,'plan_purchase');
-                }
-            usleep(50000);
-                //Level 6
-                if($user->level6_parent > 0){
-                treeSale($user->id,$membership->price,6,'plan_purchase');
-                }
-            usleep(50000);
-                //Level 7
-                if($user->level7_parent > 0){
-                treeSale($user->id,$membership->price,7,'plan_purchase');
-                }
-            $notify[] = ['success', 'Purchased ' . $plan->name . ' Successfully'];
-            return redirect()->route('user.home')->withNotify($notify);
-
+        $notify[] = ['success', 'Purchased ' . $plan->name . ' Successfully'];
+        return redirect()->route('user.home')->withNotify($notify);
     }
-    function planMore(Request $request)
-    {
-        $this->validate($request, ['plan_id' => 'required|integer']);
-        $plan = Plan::where('id', $request->plan_id)->where('status', 1)->where('is_default', 1)->firstOrFail();
 
+    public function planMore(Request $request)
+    {
+        $this->validate($request, [
+            'plan_id' => 'required|integer',
+            'amount' => 'required|numeric|min:5',
+            'mplan' => 'nullable|in:1,2,3,24', // Optional, only for new durations
+        ]);
+
+        $plan = Plan::where('id', $request->plan_id)->where('status', 1)->where('is_default', 1)->firstOrFail();
         $gnl = GeneralSetting::first();
         $user = User::find(Auth::id());
+
         if ($user->balance < $request->amount) {
             $notify[] = ['error', 'Insufficient Balance'];
             return back()->withNotify($notify);
         }
         if ($request->amount < 5) {
-            $notify[] = ['error', 'Minimum 5 '.$gnl->cur_text.' amount is required'];
+            $notify[] = ['error', 'Minimum 5 ' . $gnl->cur_text . ' amount is required'];
             return back()->withNotify($notify);
         }
-        if($request->mplan){
-            if($request->mplan==1){
-                $expiry =Carbon::now()->addMonth(24);
-                $user->plan_type = $request->mplan;
-                $user->plan_expiry = $expiry;
-            }
+
+        if ($request->mplan) {
+            $expiry = match ($request->mplan) {
+                '1' => Carbon::now()->addMonth(1),
+                '2' => Carbon::now()->addMonths(2),
+                '3' => Carbon::now()->addMonths(3),
+                '24' => Carbon::now()->addMonths(24),
+                default => null,
+            };
+            $user->plan_type = $request->mplan;
+            $user->plan_expiry = $expiry;
         }
-            $user_invest = $user->total_invest+$request->amount;
-            switch($user_invest){
-                case($user_invest >=70):
+
+        $user_invest = $user->total_invest + $request->amount;
+        switch (true) {
+            case ($user_invest >= 70):
                 $user->membership_id = 7;
                 break;
-                case($user_invest >=60):
+            case ($user_invest >= 60):
                 $user->membership_id = 6;
                 break;
-                case($user_invest >=50):
+            case ($user_invest >= 50):
                 $user->membership_id = 5;
                 break;
-                case($user_invest >=40):
+            case ($user_invest >= 40):
                 $user->membership_id = 4;
                 break;
-                case($user_invest >=30):
+            case ($user_invest >= 30):
                 $user->membership_id = 3;
                 break;
-                case($user_invest >=20):
+            case ($user_invest >= 20):
                 $user->membership_id = 2;
                 break;
-                case($user_invest >=5):
+            case ($user_invest >= 5):
                 $user->membership_id = 1;
                 break;
-            }
-            $user->balance -= $request->amount;
-            $user->total_invest += $request->amount;
-            $user->save();
-            $trx = $user->transactions()->create([
-                'amount' => $request->amount,
-                'trx_type' => '-',
-                'details' => 'Invested'.$request->amount.$gnl->cur_text,
-                'remark' => 'purchased_plan',
-                'trx' => getTrx(),
-                'post_balance' => getAmount($user->balance),
-            ]);
+        }
 
-            /*notify($user, 'plan_purchased', [
-                'plan' => 'invested in '.$plan->name,
-                'amount' => getAmount($request->amount),
-                'currency' => $gnl->cur_text,
-                'trx' => $trx->trx,
-                'post_balance' => getAmount($user->balance) . ' ' . $gnl->cur_text,
-            ]);*/
-            usleep(50000);
-            //for referral comission
-            if($user->added_by > 0){
-                $amount = ceil($request->amount*$plan->ref_com/100);
-                treeComission($user->id,$amount);
-            }
-            //for total sale
-            if($user->plan_type==1){
-                usleep(50000);
-                //Level 1
-                if($user->level1_parent > 0){
-                treeSale($user->id,$request->amount,1);
-                }
-                usleep(50000);
-                //Level 2
-                if($user->level2_parent > 0){
-                treeSale($user->id,$request->amount,2);
-                }
-                usleep(50000);
-                //Level 3
-                if($user->level3_parent > 0){
-                treeSale($user->id,$request->amount,3);
-                }
-                usleep(50000);
-                //Level 4
-                if($user->level4_parent > 0){
-                treeSale($user->id,$request->amount,4);
-                }
-                usleep(50000);
-                //Level 5
-                if($user->level5_parent > 0){
-                treeSale($user->id,$request->amount,5);
-                }
-                usleep(50000);
-                //Level 6
-                if($user->level6_parent > 0){
-                treeSale($user->id,$request->amount,6);
-                }
-                usleep(50000);
-                //Level 7
-                if($user->level7_parent > 0){
-                treeSale($user->id,$request->amount,7);
-                }
+        $user->balance -= $request->amount;
+        $user->total_invest += $request->amount;
+        $user->save();
 
-            }
-            $notify[] = ['success', 'Invested ' . $plan->name . ' Successfully'];
-            return redirect()->route('user.home')->withNotify($notify);
+        $trx = $user->transactions()->create([
+            'amount' => $request->amount,
+            'trx_type' => '-',
+            'details' => 'Invested ' . $request->amount . $gnl->cur_text,
+            'remark' => 'purchased_plan',
+            'trx' => getTrx(),
+            'post_balance' => getAmount($user->balance),
+        ]);
 
+        notify($user, 'plan_purchased', [
+            'plan' => 'invested in ' . $plan->name,
+            'amount' => getAmount($request->amount),
+            'currency' => $gnl->cur_text,
+            'trx' => $trx->trx,
+            'post_balance' => getAmount($user->balance) . ' ' . $gnl->cur_text,
+        ]);
+
+        // Referral commission
+        if ($user->added_by > 0) {
+            $amount = ceil($request->amount * $plan->ref_com / 100);
+            treeComission($user->id, $amount);
+        }
+
+        // Total sale for levels 1 to 7
+        if ($user->plan_type) {
+            for ($level = 1; $level <= 7; $level++) {
+                if ($user->{"level{$level}_parent"} > 0) {
+                    treeSale($user->id, $request->amount, $level);
+                }
+            }
+        }
+
+        $notify[] = ['success', 'Invested ' . $plan->name . ' Successfully'];
+        return redirect()->route('user.home')->withNotify($notify);
     }
+
     public function binarySummery()
     {
         $data['page_title'] = "Tree Summery";
-        $users = User::where('level1_parent', auth()->id())->orWhere('level2_parent', auth()->id())->orWhere('level3_parent', auth()->id())->orWhere('level4_parent', auth()->id())->orWhere('level5_parent', auth()->id())->orWhere('level6_parent', auth()->id())->orWhere('level7_parent', auth()->id())->get();
+        $users = User::where('level1_parent', auth()->id())
+            ->orWhere('level2_parent', auth()->id())
+            ->orWhere('level3_parent', auth()->id())
+            ->orWhere('level4_parent', auth()->id())
+            ->orWhere('level5_parent', auth()->id())
+            ->orWhere('level6_parent', auth()->id())
+            ->orWhere('level7_parent', auth()->id())
+            ->get();
         $data['users'] = $users->paginate(getPaginate());
         return view($this->activeTemplate . '.user.binarySummery', $data);
     }
+
     public function myRefLog()
     {
         $data['page_title'] = "My Referral";
@@ -252,7 +228,6 @@ class PlanController extends Controller
         return view($this->activeTemplate . 'user.myTree', $data);
     }
 
-
     public function otherTree(Request $request, $username = null)
     {
         if ($request->username) {
@@ -260,7 +235,7 @@ class PlanController extends Controller
         } else {
             $user = User::where('username', $username)->first();
         }
-        if ($user && treeAuth($user->id, auth()->id(),'user')==true) {
+        if ($user && treeAuth($user->id, auth()->id(), 'user') == true) {
             $data['tree'] = showTreePage($user->id);
             $data['page_title'] = "Tree of " . $user->fullname;
             return view($this->activeTemplate . 'user.myTree', $data);
@@ -268,7 +243,5 @@ class PlanController extends Controller
 
         $notify[] = ['error', 'Tree Not Found or You do not have Permission to view that!!'];
         return redirect()->route('user.my.tree')->withNotify($notify);
-
     }
-
 }
