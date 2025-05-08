@@ -4,7 +4,7 @@
     <div class="sidebar__inner">
         <div class="sidebar__logo">
             <a href="{{route('user.home')}}" class="sidebar__main-logo"><img
-                    src="{{getImage(imagePath()['logoIcon']['path'] .'/logo.png')}}" alt="@lang('image')"></a>
+                    src="{{getImage(imagePath()['logoIcon']['path'] .'/mainlogo.png')}}" alt="@lang('image')"></a>
             <a href="{{route('user.home')}}" class="sidebar__logo-shape"><img
                     src="{{getImage(imagePath()['logoIcon']['path'] .'/favicon.png')}}" alt="@lang('image')"></a>
             <button type="button" class="navbar__expand"></button>

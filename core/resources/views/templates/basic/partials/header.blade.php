@@ -5,7 +5,7 @@
                 <div class="header-menu-content">
                     <nav class="navbar navbar-expand-lg p-0">
                         <a class="site-logo site-title" href="{{route('jhome')}}">
-                            <img src="{{getImage(imagePath()['logoIcon']['path'] .'/logo.png')}}"  alt="@lang('site-logo')">
+                            <img src="{{getImage(imagePath()['logoIcon']['path'] .'/mainlogo.png')}}"  alt="@lang('site-logo')">
                         </a>
                         <div class="language-select-area d-block d-lg-none ml-auto">
                             <select class="language-select langSel">

@@ -38,7 +38,7 @@ class UserRequestApi extends Controller
                        return response()->json([
                           'status' => 200,
                           'message' =>'success',
-                          'data'    =>$userData->username.' is verified user and has required balance of '.$userData->balance.' AXT',
+                          'data'    =>$userData->username.' is verified user and has required balance of '.$userData->balance.' USDT',
                         ],200);
                     }
                 }

@@ -328,7 +328,7 @@ class RegisterController extends Controller
         $regCheck->save();
         //create user ID
         if($user->id){
-            $userID ='AXT' . str_pad($user->id ?? 1 + 1, 6, "0", STR_PAD_LEFT);
+            $userID ='TN' . str_pad($user->id ?? 1 + 1, 6, "0", STR_PAD_LEFT);
             \DB::table('users')->where('id',$user->id)->update(array('username' => $userID));
         }
         $adminNotification = new AdminNotification();

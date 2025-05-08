@@ -798,7 +798,7 @@ b {
 .btn--success,
 .badge--success,
 .bg--success {
-  background-color: #28c76f !important;
+  background-color: #cc8e31 !important;
 }
 
 .btn--danger,
@@ -876,7 +876,7 @@ b {
 }
 
 .text--success {
-  color: #28c76f !important;
+  color: #cc8e31 !important;
 }
 
 .text--danger {
@@ -5081,7 +5081,7 @@ textarea.form--control {
 
   border-radius: 5px;
 
-  background: #5a5eff;
+  background: #0c3166;
 
   border: 2px solid transparent;
 
@@ -5111,9 +5111,9 @@ textarea.form--control {
 }
 
 .cmn--btn:not(button):hover {
-  color: #5a5eff;
+  color: #0c3166;
 
-  border-color: #5a5eff;
+  border-color: #0c3166;
 
   text-decoration: underline;
 
@@ -5767,7 +5767,7 @@ a {
 .input-popup p.text--success::before {
   content: "\f058";
 
-  color: #28c76f;
+  color: #cc8e31;
 }
 
 .header-area .logo img {

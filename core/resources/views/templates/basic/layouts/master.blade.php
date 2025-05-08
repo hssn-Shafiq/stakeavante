@@ -30,7 +30,7 @@ $bottomMenu=\App\Models\Menu::getAllMenus('Bottom');
     <nav class="navbar navbar-expand-lg bg-transparent sticky-top">
       <div class="container">
         <a class="navbar-brand" href="{{route('home')}}">
-          <img src="{{getImage(imagePath()['logoIcon']['path'] .'/logo.png')}}" alt="@lang('site-logo')" width="60" height="auto" />
+          <img src="{{getImage(imagePath()['logoIcon']['path'] .'/mainlogo.png')}}" alt="@lang('site-logo')" width="60" height="auto" />
         </a>
         <button
           class="navbar-toggler"

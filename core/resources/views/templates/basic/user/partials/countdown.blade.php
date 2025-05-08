@@ -118,7 +118,7 @@ section {
             <div class="col-xs-12 col-sm-12 col-md-6 countdown-wrapper text-center mb20">
                 <div class="card">
                     <div class="card-header">
-                        Your Free AXT are
+                        Your Free USDT are
                     </div>
                     <div class="card-block">
                         <div id="countdown">
@@ -128,10 +128,10 @@ section {
                         </div>
                     </div>
                     <div class="card-footer">
-                        <h4>To withdraw free AXT</h4>
-                        <p><span class="fa fa-arrow-right"></span> You must have {{$general->coin_limit}} AXT.</p>
+                        <h4>To withdraw free USDT</h4>
+                        <p><span class="fa fa-arrow-right"></span> You must have {{$general->coin_limit}} USDT.</p>
                         <p><span class="fa fa-arrow-right"></span> You must have followed all social links in the popup.</p>
-                        <p><span class="fa fa-arrow-right"></span> You can increase daily reward as below.</br><span  class="badge rounded-pill bg-success">Day 1st {{($general->coin_daily+(0*$general->coin_multiple))}} AXT</span><span  class="badge rounded-pill bg-primary">Day 2nd {{($general->coin_daily+(1*$general->coin_multiple))}} AXT</span><span  class="badge rounded-pill bg-info">Day 3rd {{($general->coin_daily+(2*$general->coin_multiple))}} AXT</span><span  class="badge rounded-pill bg-success">Day 4th {{($general->coin_daily+(3*$general->coin_multiple))}} AXT</span><span  class="badge rounded-pill bg-primary">Day 5th {{($general->coin_daily+(4*$general->coin_multiple))}} AXT</span><span  class="badge rounded-pill bg-info">Day 6th {{($general->coin_daily+(5*$general->coin_multiple))}} AXT</span><span  class="badge rounded-pill bg-danger">Day 7th {{($general->coin_daily+(6*$general->coin_multiple))}} AXT</span>
+                        <p><span class="fa fa-arrow-right"></span> You can increase daily reward as below.</br><span  class="badge rounded-pill bg-success">Day 1st {{($general->coin_daily+(0*$general->coin_multiple))}} USDT</span><span  class="badge rounded-pill bg-primary">Day 2nd {{($general->coin_daily+(1*$general->coin_multiple))}} USDT</span><span  class="badge rounded-pill bg-info">Day 3rd {{($general->coin_daily+(2*$general->coin_multiple))}} USDT</span><span  class="badge rounded-pill bg-success">Day 4th {{($general->coin_daily+(3*$general->coin_multiple))}} USDT</span><span  class="badge rounded-pill bg-primary">Day 5th {{($general->coin_daily+(4*$general->coin_multiple))}} USDT</span><span  class="badge rounded-pill bg-info">Day 6th {{($general->coin_daily+(5*$general->coin_multiple))}} USDT</span><span  class="badge rounded-pill bg-danger">Day 7th {{($general->coin_daily+(6*$general->coin_multiple))}} USDT</span>
                         </p>
                         @if(auth()->user()->free_coins>=$general->coin_limit)
                         <a href="#" class="btn btn-success">Process With Draw</a>
@@ -143,7 +143,7 @@ section {
                 <div class="card">
                     @if($coins_date_diff < 1)
                     <div class="card-header">
-                        Claim your next Free AXT in
+                        Claim your next Free USDT in
                     </div>
                     <div class="card-block">
                         <div id="countdown">
@@ -169,10 +169,10 @@ section {
                     </div>
                     @else
                     <div class="card-header">
-                        Claim your Free AXT
+                        Claim your Free USDT
                     </div>
                     <div class="card-block">
-                         <a href="{{route('user.free-coins')}}" class="btn btn-info">Claim Free AXT Now</a>
+                         <a href="{{route('user.free-coins')}}" class="btn btn-info">Claim Free USDT Now</a>
                     </div>
                     <div class="card-footer">
                        <div class="col-md-12">

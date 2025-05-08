@@ -83,7 +83,7 @@ if ($request->hasFile('logo')) {
         if (!file_exists($path)) {
             mkdir($path, 0755, true);
         }
-        Image::make($request->logo)->save($path . '/logo.png');
+        Image::make($request->logo)->save($path . '/mainlogo.png');
     } catch (\Exception $exp) {
         $notify[] = ['error', 'Logo could not be uploaded.'];
         return back()->withNotify($notify);
@@ -96,7 +96,7 @@ if ($request->hasFile('darkLogo')) {
         if (!file_exists($path)) {
             mkdir($path, 0755, true);
         }
-        Image::make($request->darkLogo)->save($path . '/darkLogo.png');
+        Image::make($request->darkLogo)->save($path . '/darkmainlogo.png');
     } catch (\Exception $exp) {
         $notify[] = ['error', 'Dark Logo could not be uploaded.'];
         return back()->withNotify($notify);

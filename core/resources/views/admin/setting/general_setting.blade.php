@@ -71,7 +71,7 @@
                         <div class="input-group">
                             <input class="form-control  form-control-lg" type="text" name="coin_limit" value="{{getAmount($general->coin_limit)}}">
                             <div class="input-group-append">
-                                <span class="input-group-text">AXT</span>
+                                <span class="input-group-text">USDT</span>
                             </div>
                         </div>
                     </div>
@@ -82,7 +82,7 @@
                         <div class="input-group">
                             <input class="form-control  form-control-lg" type="text" name="coin_commission" value="{{getAmount($general->coin_commission)}}">
                             <div class="input-group-append">
-                                <span class="input-group-text">AXT</span>
+                                <span class="input-group-text">USDT</span>
                             </div>
                         </div>
                     </div>
@@ -93,7 +93,7 @@
                         <div class="input-group">
                             <input class="form-control  form-control-lg" type="text" name="coin_daily" value="{{getAmount($general->coin_daily)}}">
                             <div class="input-group-append">
-                                <span class="input-group-text">AXT</span>
+                                <span class="input-group-text">USDT</span>
                             </div>
                         </div>
                     </div>
@@ -104,7 +104,7 @@
                         <div class="input-group">
                             <input class="form-control  form-control-lg" type="text" name="coin_multiple" value="{{getAmount($general->coin_multiple)}}">
                             <div class="input-group-append">
-                                <span class="input-group-text">AXT</span>
+                                <span class="input-group-text">USDT</span>
                             </div>
                         </div>
                     </div>

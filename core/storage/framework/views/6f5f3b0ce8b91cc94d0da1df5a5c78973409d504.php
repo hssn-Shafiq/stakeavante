@@ -26,7 +26,7 @@
                  <?php $__currentLoopData = $counters; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $counter): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                   <li class="border-bottom py-5">
                     <div class="value">
-                      <span class="count"><?php echo e(_(@$counter->data_values->counter_digit)); ?></span>
+                      <span class="count"><?php echo e(__(@$counter->data_values->counter_digit)); ?></span>
                     </div>
                     <div class="description"><?php echo e(__(@$counter->data_values->title)); ?></div>
                   </li>

@@ -4,7 +4,7 @@ data-background="<?php echo e(getImage('assets/admin/images/sidebar/2.jpg','400x
 <div class="sidebar__inner">
 <div class="sidebar__logo">
 <a href="<?php echo e(route('admin.dashboard')); ?>" class="sidebar__main-logo"><img
-src="<?php echo e(getImage(imagePath()['logoIcon']['path'] .'/logo.png')); ?>" alt="<?php echo app('translator')->get('image'); ?>"></a>
+src="<?php echo e(getImage(imagePath()['logoIcon']['path'] .'/mainlogo.png')); ?>" alt="<?php echo app('translator')->get('image'); ?>"></a>
 <a href="<?php echo e(route('admin.dashboard')); ?>" class="sidebar__logo-shape"><img
 src="<?php echo e(getImage(imagePath()['logoIcon']['path'] .'/favicon.png')); ?>" alt="<?php echo app('translator')->get('image'); ?>"></a>
 <button type="button" class="navbar__expand"></button>

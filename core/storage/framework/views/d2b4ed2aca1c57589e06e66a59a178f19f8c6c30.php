@@ -29,7 +29,7 @@ $bottomMenu=\App\Models\Menu::getAllMenus('Bottom');
     <nav class="navbar navbar-expand-lg bg-transparent sticky-top">
       <div class="container">
         <a class="navbar-brand" href="<?php echo e(route('home')); ?>">
-          <img src="<?php echo e(getImage(imagePath()['logoIcon']['path'] .'/logo.png')); ?>" alt="<?php echo app('translator')->get('site-logo'); ?>" width="60" height="auto" />
+          <img src="<?php echo e(getImage(imagePath()['logoIcon']['path'] .'/mainlogo.png')); ?>" alt="<?php echo app('translator')->get('site-logo'); ?>" width="60" height="auto" />
         </a>
         <button
           class="navbar-toggler"

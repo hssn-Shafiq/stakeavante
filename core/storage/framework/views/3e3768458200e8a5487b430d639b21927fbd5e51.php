@@ -10,7 +10,7 @@
 
                         <a href="<?php echo e(route('home')); ?>">
 
-                            <img src="<?php echo e(getImage(imagePath()['logoIcon']['path'] .'/darkLogo.png')); ?>"  alt="<?php echo app('translator')->get('site-logo'); ?>">
+                            <img src="<?php echo e(getImage(imagePath()['logoIcon']['path'] .'/darkmainlogo.png')); ?>"  alt="<?php echo app('translator')->get('site-logo'); ?>">
 
                         </a>
 
