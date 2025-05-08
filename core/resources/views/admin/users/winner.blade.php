@@ -38,7 +38,7 @@
                                 <td data-label="@lang('Reward 4')">{!! ($user->reward_four==1?'<i class="fa fa-check text-success" title="Royal Leader"></i></i>':'<i class="fa fa-times text-danger"></i>') !!}</td>
                                 <td data-label="@lang('Reward 5')">{!! ($user->reward_five==1?'<i class="fa fa-check text-success" title="Crown Leader"></i></i>':'<i class="fa fa-times text-danger"></i>') !!}</td>
                                 <td data-label="@lang('Reward 6')">{!! ($user->reward_six==1?'<i class="fa fa-check text-success" title="Diamond Leader"></i></i>':'<i class="fa fa-times text-danger"></i>') !!}</td>
-                                <td data-label="@lang('Reward 7')">{!! ($user->reward_seven==1?'<i class="fa fa-check text-success" title="Avante Leader"></i></i>':'<i class="fa fa-times text-danger"></i>') !!}</td>
+                                <td data-label="@lang('Reward 7')">{!! ($user->reward_seven==1?'<i class="fa fa-check text-success" title="The Nobel Leader"></i></i>':'<i class="fa fa-times text-danger"></i>') !!}</td>
                                 <td data-label="@lang('Action')">
                                     <a href="{{ route('admin.users.detail', $user->id) }}" class="icon-btn" data-toggle="tooltip" data-original-title="@lang('Details')">
                                         <i class="las la-desktop text--shadow"></i>

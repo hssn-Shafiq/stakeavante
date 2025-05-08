@@ -13,7 +13,7 @@ class ManagePlanController extends Controller
 {
     public function plan()
     {
-        $page_title = 'Avante Plans';
+        $page_title = 'The Nobel Plans';
         $empty_message = 'No Plan found';
         $plans = Plan::paginate(getPaginate());
         return view('admin.plan.index', compact('page_title', 'plans', 'empty_message'));
@@ -81,7 +81,7 @@ class ManagePlanController extends Controller
 
     public function membership()
     {
-        $page_title = 'Avante Membership';
+        $page_title = 'The Nobel Membership';
         $empty_message = 'No Membership found';
         $memberships = Membership::paginate(getPaginate());
         return view('admin.plan.membership', compact('page_title', 'memberships', 'empty_message'));
@@ -106,7 +106,7 @@ class ManagePlanController extends Controller
 
     public function rewards()
     {
-        $page_title = 'Avante Rewards';
+        $page_title = 'The Nobel Rewards';
         $empty_message = 'No rewards found';
         $rewards = Reward::paginate(getPaginate());
         return view('admin.plan.rewards', compact('page_title', 'rewards', 'empty_message'));

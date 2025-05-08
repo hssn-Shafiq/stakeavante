@@ -92,7 +92,8 @@
                 <div class="details">
                     <div class="numbers">
                         <span class="amount">{{getAmount($widget['free_coins'])}} </span>
-                        <span class="currency-sign">{{trans($general->sec_cur_text)}}</span>
+                        <!-- <span class="currency-sign">{{trans($general->sec_cur_text)}}</span> -->
+                         <span class="currency-sign">USDT</span>
                     </div>
                     <div class="desciption">
                         <span>@lang('Total Free Coins')</span>

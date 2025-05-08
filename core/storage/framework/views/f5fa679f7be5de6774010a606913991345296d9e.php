@@ -1,3 +1,5 @@
+
+
 <?php $__env->startSection('panel'); ?>
     <div class="row mb-none-30">
         <div class="col-xl-3 col-lg-4 col-sm-6 mb-30">
@@ -90,7 +92,8 @@
                 <div class="details">
                     <div class="numbers">
                         <span class="amount"><?php echo e(getAmount($widget['free_coins'])); ?> </span>
-                        <span class="currency-sign"><?php echo e(trans($general->sec_cur_text)); ?></span>
+                        <!-- <span class="currency-sign"><?php echo e(trans($general->sec_cur_text)); ?></span> -->
+                         <span class="currency-sign">USDT</span>
                     </div>
                     <div class="desciption">
                         <span><?php echo app('translator')->get('Total Free Coins'); ?></span>
@@ -124,6 +127,11 @@
                 <div class="details">
                     <div class="numbers">
                         <span class="amount"><?php echo e(getAmount($widget['total_binary_com'])); ?></span>
+                        <span class="currency-sign"><?php echo e($general->cur_sym); ?></span>
+
+                    </div>
+                    <div class="numbers">
+                        <span class="amount"><?php echo e(getAmount($widget['total_indir_com'])); ?></span>
                         <span class="currency-sign"><?php echo e($general->cur_sym); ?></span>
 
                     </div>

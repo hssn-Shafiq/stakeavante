@@ -1,82 +1,111 @@
+
+
 <?php $__env->startSection('panel'); ?>
-    <div class="row mb-none-30">
-        <div class="col-lg-12 col-sm-6 mb-30">
-            <div class="card border--light">
-                <?php echo $__env->make($activeTemplate .'user.partials.countdown', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+<div class="row mb-none-30">
+    <div class="col-lg-12 col-sm-6 mb-30">
+        <div class="card border--light">
+            <?php echo $__env->make($activeTemplate . 'user.partials.countdown', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+        </div>
+    </div>
+    <?php if(cryp_calculator() == 1): ?>
+    <div class="col-lg-12 col-sm-6 mb-30">
+        <div class="card border--light">
+            <script type="text/javascript" src="https://files.coinmarketcap.com/static/widget/currency.js"></script>
+            <div class="coinmarketcap-currency-widget" data-currencyid="25923" data-base="PKR" data-secondary="USD"
+                data-ticker="true" data-rank="true" data-marketcap="false" data-volume="true" data-statsticker="true"
+                data-stats="USD"></div>
+        </div>
+    </div>
+    <?php endif; ?>
+    <?php if(isUserPiad() == true): ?>
+    <?php if(auth()->user()->reward_one != 0): ?>
+    <div class="col-lg-12 col-sm-6 mb-10">
+        <div class="card border--light">
+            <div class="card-body">
+                <div class="bg--white">
+                    <?php if(auth()->user()->reward_one == 1): ?>
+                    <img id="output"
+                        src="<?php echo e(getImage('assets/images/user/awards/reward1-main.png', null, true)); ?>"
+                        alt="<?php echo app('translator')->get('reward-1-image'); ?>" class="img-responsive b-radius--10"
+                        title="Team Leader Achieved" style="width:10%;">
+                    <?php endif; ?>
+                    <?php if(auth()->user()->reward_two == 1): ?>
+                    <img id="output"
+                        src="<?php echo e(getImage('assets/images/user/awards/reward2-main.png', null, true)); ?>"
+                        alt="<?php echo app('translator')->get('reward-2-image'); ?>" class="img-responsive b-radius--10"
+                        title="Region Leader Achieved" style="width:10%;">
+                    <?php endif; ?>
+                    <?php if(auth()->user()->reward_three == 1): ?>
+                    <img id="output"
+                        src="<?php echo e(getImage('assets/images/user/awards/reward3-main.png', null, true)); ?>"
+                        alt="<?php echo app('translator')->get('reward-3-image'); ?>" class="img-responsive b-radius--10"
+                        title="National Leader Achieved" style="width:10%;">
+                    <?php endif; ?>
+                    <?php if(auth()->user()->reward_four == 1): ?>
+                    <img id="output"
+                        src="<?php echo e(getImage('assets/images/user/awards/reward4-main.png', null, true)); ?>"
+                        alt="<?php echo app('translator')->get('reward-4-image'); ?>" class="img-responsive b-radius--10"
+                        title="Royal Leader Achieved" style="width:10%;">
+                    <?php endif; ?>
+                    <?php if(auth()->user()->reward_five == 1): ?>
+                    <img id="output"
+                        src="<?php echo e(getImage('assets/images/user/awards/reward5-main.png', null, true)); ?>"
+                        alt="<?php echo app('translator')->get('reward-5-image'); ?>" class="img-responsive b-radius--10"
+                        title="Crown Leader Achieved" style="width:10%;">
+                    <?php endif; ?>
+                    <?php if(auth()->user()->reward_six == 1): ?>
+                    <img id="output"
+                        src="<?php echo e(getImage('assets/images/user/awards/reward6-main.png', null, true)); ?>"
+                        alt="<?php echo app('translator')->get('reward-6-image'); ?>" class="img-responsive b-radius--10"
+                        title="Diamond Leader Achieved" style="width:10%;">
+                    <?php endif; ?>
+                    <?php if(auth()->user()->reward_seven == 1): ?>
+                    <img id="output"
+                        src="<?php echo e(getImage('assets/images/user/awards/reward7-main.png', null, true)); ?>"
+                        alt="<?php echo app('translator')->get('reward-7-image'); ?>" class="img-responsive b-radius--10"
+                        title="The Nobel Leader Achieved" style="width:10%;">
+                    <?php endif; ?>
+                </div>
             </div>
         </div>
-        <?php if(cryp_calculator()==1): ?>
-        <div class="col-lg-12 col-sm-6 mb-30">
-            <div class="card border--light">
-                <script type="text/javascript" src="https://files.coinmarketcap.com/static/widget/currency.js"></script><div class="coinmarketcap-currency-widget" data-currencyid="25923" data-base="PKR" data-secondary="USD" data-ticker="true" data-rank="true" data-marketcap="false" data-volume="true" data-statsticker="true" data-stats="USD"></div>
-            </div>
-        </div>
-        <?php endif; ?>
-        <?php if(isUserPiad()==true): ?>
-        <?php if(auth()->user()->reward_one!=0): ?>
-        <div class="col-lg-12 col-sm-6 mb-10">
-                <div class="card border--light">
-                    <div class="card-body">
-                        <div class="bg--white">
-                        <?php if(auth()->user()->reward_one==1): ?>
-                        <img id="output" src="<?php echo e(getImage('assets/images/user/awards/reward1-main.png',  null, true)); ?>" alt="<?php echo app('translator')->get('reward-1-image'); ?>" class="img-responsive b-radius--10" title="Team Leader Achieved" style="width:10%;">
-                        <?php endif; ?>
-                        <?php if(auth()->user()->reward_two==1): ?>
-                        <img id="output" src="<?php echo e(getImage('assets/images/user/awards/reward2-main.png',  null, true)); ?>" alt="<?php echo app('translator')->get('reward-2-image'); ?>" class="img-responsive b-radius--10" title="Region Leader Achieved" style="width:10%;">
-                        <?php endif; ?>
-                        <?php if(auth()->user()->reward_three==1): ?>
-                        <img id="output" src="<?php echo e(getImage('assets/images/user/awards/reward3-main.png',  null, true)); ?>" alt="<?php echo app('translator')->get('reward-3-image'); ?>" class="img-responsive b-radius--10" title="National Leader Achieved" style="width:10%;">
-                        <?php endif; ?>
-                        <?php if(auth()->user()->reward_four==1): ?>
-                        <img id="output" src="<?php echo e(getImage('assets/images/user/awards/reward4-main.png',  null, true)); ?>" alt="<?php echo app('translator')->get('reward-4-image'); ?>" class="img-responsive b-radius--10" title="Royal Leader Achieved" style="width:10%;">
-                        <?php endif; ?>
-                        <?php if(auth()->user()->reward_five==1): ?>
-                        <img id="output" src="<?php echo e(getImage('assets/images/user/awards/reward5-main.png',  null, true)); ?>" alt="<?php echo app('translator')->get('reward-5-image'); ?>" class="img-responsive b-radius--10" title="Crown Leader Achieved" style="width:10%;">
-                        <?php endif; ?>
-                        <?php if(auth()->user()->reward_six==1): ?>
-                        <img id="output" src="<?php echo e(getImage('assets/images/user/awards/reward6-main.png',  null, true)); ?>" alt="<?php echo app('translator')->get('reward-6-image'); ?>" class="img-responsive b-radius--10" title="Diamond Leader Achieved" style="width:10%;">
-                        <?php endif; ?>
-                        <?php if(auth()->user()->reward_seven==1): ?>
-                        <img id="output" src="<?php echo e(getImage('assets/images/user/awards/reward7-main.png',  null, true)); ?>" alt="<?php echo app('translator')->get('reward-7-image'); ?>" class="img-responsive b-radius--10" title="Avante Leader Achieved" style="width:10%;">
-                        <?php endif; ?>
+    </div>
+    <?php endif; ?>
+    <?php if($general->notice != null): ?>
+    <div class="col-lg-12 col-sm-6 mb-30">
+        <div class="card border--light">
+            <div class="card-header"><?php echo app('translator')->get('Notice Board'); ?>
+                <?php if(auth()->user()->plan_type != 0): ?>
+                <marquee behavior="scroll" direction="left" scrollamount="2">
+                    <h4 class="text-danger" style="font-family:Cursive;">
+                        <?php if(auth()->user()->plan_id < 1): ?>
+                            <?php echo app('translator')->get('Your Staking plan is expired on '); ?><?php echo e(auth()->user()->plan_expiry); ?>
+
+                                        <?php else: ?>
+                                            <?php echo app('translator')->get(' Your Staking will expire on '); ?><?php echo e(auth()->user()->plan_expiry); ?>
+
+                                        <?php endif; ?>
+                                    </h4>
+                                </marquee>
+                            <?php endif; ?>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text"><?php echo $general->notice; ?></p>
                         </div>
                     </div>
                 </div>
-            </div>
-        <?php endif; ?>
-        <?php if($general->notice != null): ?>
-            <div class="col-lg-12 col-sm-6 mb-30">
-                <div class="card border--light">
-                    <div class="card-header"><?php echo app('translator')->get('Notice Board'); ?>
-                        <?php if(auth()->user()->plan_type!=0): ?>
-                        <marquee behavior="scroll" direction="left" scrollamount="2">
-                        <h4 class="text-danger" style="font-family:Cursive;">
-                            <?php if(auth()->user()->plan_id < 1): ?><?php echo app('translator')->get('Your Staking plan is expired on '); ?><?php echo e(auth()->user()->plan_expiry); ?>
-
-                            <?php else: ?>
-                            <?php echo app('translator')->get('Your Staking will expire on '); ?><?php echo e(auth()->user()->plan_expiry); ?>
-
-                            <?php endif; ?>
-                        </h4></marquee>
-                        <?php endif; ?>
-                    </div>
-                    <div class="card-body">
-                        <p class="card-text"><?php echo $general->notice; ?></p>
-                    </div>
-                </div>
-            </div>
-        <?php endif; ?> 
+            <?php endif; ?>
         <?php else: ?>
-        <?php if($general->free_user_notice != null): ?>
-            <div class="col-lg-12 col-sm-6 mb-30">
-                <div class="card border--light">
-                    <?php if($general->notice == null): ?>
-                        <div class="card-header"><?php echo app('translator')->get('Notice'); ?></div>   <?php endif; ?>
-                    <div class="card-body">
-                        <p class="card-text"> <?php echo $general->free_user_notice; ?> </p>
-                    </div>
-                </div>
+            <?php if($general->free_user_notice != null): ?>
+                <div class="col-lg-12 col-sm-6 mb-30">
+                    <div class="card border--light">
+                        <?php if($general->notice == null): ?>
+                            <div class="card-header"><?php echo app('translator')->get(' Notice'); ?></div>
+                            <?php endif; ?>
+                            <div class="card-body">
+                                <p class="card-text"> <?php echo $general->free_user_notice; ?> </p>
+                            </div>
             </div>
+        </div>
         <?php endif; ?>
         <?php endif; ?>
         <div class="col-xl-3 col-lg-3 col-sm-6 mb-30">
@@ -158,9 +187,9 @@
                     <div class="desciption">
                         <span class="text--small"><?php echo app('translator')->get('Total Withdraw'); ?></span>
                     </div>
-                    <?php if(isUserPiad()==true): ?>
+                    <?php if(isUserPiad() == true): ?>
                     <a href="<?php echo e(route('user.report.withdraw')); ?>"
-                       class="btn btn-sm text--small bg--white text--black box--shadow3 mt-3"><?php echo app('translator')->get('View All'); ?></a>
+                        class="btn btn-sm text--small bg--white text--black box--shadow3 mt-3"><?php echo app('translator')->get('View All'); ?></a>
                     <?php endif; ?>
                 </div>
             </div>
@@ -172,20 +201,31 @@
                 </div>
                 <div class="details">
                     <div class="numbers">
-                        <span class="amount"><?php echo e(getAmount(auth()->user()->total_binary_com)); ?></span>
-                        <span class="currency-sign"><?php echo e($general->cur_text); ?></span>
+                        <div class="d-flex flex-row  justify-content-between">
+                            <div class="comissions_amount">
+                                <span class="amount">
+                                    <i class="las la-arrow-circle-up" data-toggle="tooltip" data-placement="top" title="<?php echo app('translator')->get('Indirect Referrals Commission'); ?>"></i><?php echo e(getAmount(auth()->user()->total_indir_com)); ?>
+
+                                </span>
+                                <span class="amount">
+                                <i class="las la-user-circle" data-toggle="tooltip" data-placement="top" title="<?php echo app('translator')->get('Direct Referrals Commission'); ?>"></i><?php echo e(getAmount(auth()->user()->total_binary_com)); ?>
+
+                                </span>
+                            </div>
+                            <span class="currency-sign ms-2"> <?php echo e($general->cur_text); ?></span>
+                        </div>
                     </div>
                     <div class="desciption">
-                        <span class="text--small"><?php echo app('translator')->get('Total Tree  Commission'); ?></span>
+                        <span class="text--small"><?php echo app('translator')->get('Total Tree Commission'); ?></span>
                     </div>
-                    <?php if(isUserPiad()==true): ?>
+                    <?php if(isUserPiad() == true): ?>
                     <a href="<?php echo e(route('user.report.binaryCom')); ?>"
-                       class="btn btn-sm text--small bg--white text--black box--shadow3 mt-3"><?php echo app('translator')->get('View All'); ?></a>
+                        class="btn btn-sm text--small bg--white text--black box--shadow3 mt-3"><?php echo app('translator')->get('View All'); ?></a>
                     <?php endif; ?>
                 </div>
             </div>
         </div>
-         <div class="col-xl-3 col-lg-3 col-sm-6 mb-30">
+        <div class="col-xl-3 col-lg-3 col-sm-6 mb-30">
             <div class="dashboard-w1 bg--info b-radius--10 box-shadow has--link">
                 <div class="icon">
                     <i class="las la-money-bill"></i>
@@ -197,9 +237,9 @@
                     <div class="desciption">
                         <span class="text--small"><?php echo app('translator')->get('Total Tree Users'); ?></span>
                     </div>
-                    <?php if(isUserPiad()==true): ?>
+                    <?php if(isUserPiad() == true): ?>
                     <a href="<?php echo e(route('user.binary.summery')); ?>"
-                       class="btn btn-sm text--small bg--white text--black box--shadow3 mt-3"><?php echo app('translator')->get('View All'); ?></a>
+                        class="btn btn-sm text--small bg--white text--black box--shadow3 mt-3"><?php echo app('translator')->get('View All'); ?></a>
                     <?php endif; ?>
                 </div>
             </div>
@@ -217,48 +257,49 @@
                     <div class="desciption">
                         <span class="text--small"><?php echo app('translator')->get('Total Referral'); ?></span>
                     </div>
-                    <?php if(isUserPiad()==true): ?>
+                    <?php if(isUserPiad() == true): ?>
                     <a href="<?php echo e(route('user.my.ref')); ?>"
-                       class="btn btn-sm text--small bg--white text--black box--shadow3 mt-3"><?php echo app('translator')->get('View All'); ?></a>
+                        class="btn btn-sm text--small bg--white text--black box--shadow3 mt-3"><?php echo app('translator')->get('View All'); ?></a>
                     <?php endif; ?>
                 </div>
             </div>
         </div>
     </div>
-<?php if(auth()->user()->social_count < 6): ?>
-<?php echo $__env->make($activeTemplate .'user.partials.socialFollowModal', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
-<?php endif; ?>
-<?php $__env->stopSection(); ?>
-<?php $__env->startPush('script'); ?>
-<script>
-    $(document).ready(function(){
+    <?php if(auth()->user()->social_count < 6): ?>
+        <?php echo $__env->make($activeTemplate . 'user.partials.socialFollowModal' , \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+        <?php endif; ?>
+        <?php $__env->stopSection(); ?>
+        <?php $__env->startPush('script'); ?>
+        <script>
+        $(document).ready(function() {
         $("#myModal").modal('show');
-    });
-</script>
-<script>
-'use strict';
-(function($) {
-document.body.addEventListener('click', copy, true);
-function copy(e) {
-var
-    t = e.target,
-    c = t.dataset.copytarget,
-    inp = (c ? document.querySelector(c) : null);
-if (inp && inp.select) {
-    inp.select();
-    try {
-        document.execCommand('copy');
-        inp.blur();
-        t.classList.add('copied');
-        setTimeout(function() { t.classList.remove('copied'); }, 1500);
-    }catch (err) {
-        alert(`<?php echo app('translator')->get('Please press Ctrl/Cmd+C to copy'); ?>`);
-    }
-}
-}
-})(jQuery);
-</script>
-<?php $__env->stopPush(); ?>
+        });
+        </script>
+        <script>
+            'use strict';
+            (function($) {
+                document.body.addEventListener('click', copy, true);
 
-
+                function copy(e) {
+                    var
+                        t = e.target,
+                        c = t.dataset.copytarget,
+                        inp = (c ? document.querySelector(c) : null);
+                    if (inp && inp.select) {
+                        inp.select();
+                        try {
+                            document.execCommand('copy');
+                            inp.blur();
+                            t.classList.add('copied');
+                            setTimeout(function() {
+                                t.classList.remove('copied');
+                            }, 1500);
+                        } catch (err) {
+                            alert(`<?php echo app('translator')->get('Please press Ctrl/Cmd+C to copy'); ?>`);
+                        }
+                    }
+                }
+            })(jQuery);
+        </script>
+        <?php $__env->stopPush(); ?>
 <?php echo $__env->make($activeTemplate . 'user.layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\xampp\htdocs\stakeavante\core\resources\views/templates/basic/user/dashboard.blade.php ENDPATH**/ ?>

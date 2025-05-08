@@ -8,7 +8,7 @@
             <div class="w-100">
                 <div class="logo mb-5">
                     <a href="{{route('home')}}">
-                        <img src="{{getImage(imagePath()['logoIcon']['path'] .'/darkmainlogo.png')}}"  alt="@lang('site-logo')">
+                        <img src="{{getImage(imagePath()['logoIcon']['path'] .'/darkLogo.png')}}"  alt="@lang('site-logo')">
                     </a>
                 </div>
                 <div class="section__header text-white">

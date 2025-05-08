@@ -11,7 +11,7 @@
 
                         <a href="{{route('home')}}">
 
-                            <img src="{{getImage(imagePath()['logoIcon']['path'] .'/darkmainlogo.png')}}"  alt="@lang('site-logo')">
+                            <img src="{{getImage(imagePath()['logoIcon']['path'] .'/darkLogo.png')}}"  alt="@lang('site-logo')">
 
                         </a>
 

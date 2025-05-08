@@ -96,7 +96,7 @@ if ($request->hasFile('darkLogo')) {
         if (!file_exists($path)) {
             mkdir($path, 0755, true);
         }
-        Image::make($request->darkLogo)->save($path . '/darkmainlogo.png');
+        Image::make($request->darkLogo)->save($path . '/darkLogo.png');
     } catch (\Exception $exp) {
         $notify[] = ['error', 'Dark Logo could not be uploaded.'];
         return back()->withNotify($notify);

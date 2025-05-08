@@ -10,7 +10,7 @@
 
                         <a href="<?php echo e(route('home')); ?>">
 
-                            <img src="<?php echo e(getImage(imagePath()['logoIcon']['path'] .'/darkmainlogo.png')); ?>"  alt="<?php echo app('translator')->get('site-logo'); ?>">
+                            <img src="<?php echo e(getImage(imagePath()['logoIcon']['path'] .'/darkLogo.png')); ?>"  alt="<?php echo app('translator')->get('site-logo'); ?>">
 
                         </a>
 
@@ -30,9 +30,9 @@
 
                         <div class="col-sm-12">
 
-                            <label for="username" class="form--label-2"><?php echo app('translator')->get('Avante ID'); ?></label>
+                            <label for="username" class="form--label-2"><?php echo app('translator')->get('The Nobel ID'); ?></label>
 
-                            <input type="text" id="username" name="username" value="<?php echo e(old('username')); ?>" placeholder="<?php echo app('translator')->get('Avante ID'); ?>" required class="form-control form--control-2">
+                            <input type="text" id="username" name="username" value="<?php echo e(old('username')); ?>" placeholder="<?php echo app('translator')->get('The Nobel ID'); ?>" required class="form-control form--control-2">
 
                         </div>
 

@@ -37,7 +37,7 @@
                                 <td data-label="<?php echo app('translator')->get('Reward 4'); ?>"><?php echo ($user->reward_four==1?'<i class="fa fa-check text-success" title="Royal Leader"></i></i>':'<i class="fa fa-times text-danger"></i>'); ?></td>
                                 <td data-label="<?php echo app('translator')->get('Reward 5'); ?>"><?php echo ($user->reward_five==1?'<i class="fa fa-check text-success" title="Crown Leader"></i></i>':'<i class="fa fa-times text-danger"></i>'); ?></td>
                                 <td data-label="<?php echo app('translator')->get('Reward 6'); ?>"><?php echo ($user->reward_six==1?'<i class="fa fa-check text-success" title="Diamond Leader"></i></i>':'<i class="fa fa-times text-danger"></i>'); ?></td>
-                                <td data-label="<?php echo app('translator')->get('Reward 7'); ?>"><?php echo ($user->reward_seven==1?'<i class="fa fa-check text-success" title="Avante Leader"></i></i>':'<i class="fa fa-times text-danger"></i>'); ?></td>
+                                <td data-label="<?php echo app('translator')->get('Reward 7'); ?>"><?php echo ($user->reward_seven==1?'<i class="fa fa-check text-success" title="The Nobel Leader"></i></i>':'<i class="fa fa-times text-danger"></i>'); ?></td>
                                 <td data-label="<?php echo app('translator')->get('Action'); ?>">
                                     <a href="<?php echo e(route('admin.users.detail', $user->id)); ?>" class="icon-btn" data-toggle="tooltip" data-original-title="<?php echo app('translator')->get('Details'); ?>">
                                         <i class="las la-desktop text--shadow"></i>

@@ -32,7 +32,7 @@
                                         <div class="avatar-preview">
                                             <div class="row">
                                                 <div class="col-sm-12 mt-sm-0 mt-4">
-                                                    <div class="profilePicPreview logoPicPrev bg--dark" style="background-image: url({{ getImage(imagePath()['logoIcon']['path'].'/darkmainlogo.png', '?'.time()) }})">
+                                                    <div class="profilePicPreview logoPicPrev bg--dark" style="background-image: url({{ getImage(imagePath()['logoIcon']['path'].'/darkLogo.png', '?'.time()) }})">
                                                         <button type="button" class="remove-image"><i class="fa fa-times"></i></button>
                                                     </div>
                                                 </div>
