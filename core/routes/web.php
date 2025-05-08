@@ -347,7 +347,7 @@ Route::name('user.')->prefix('user')->group(function () {
             Route::post('/verify-otp', 'UserController@otpVerify')->name('verify-otp');
             //user Reports
             Route::get('/achievments', 'UserReportController@myAchievments')->name('achievments');
-            Route::get('/reward-log', 'UserReportController@transferlog')->name('transfer.log');
+            Route::get('/reward-log', 'UserReportController@nsferlog')->name('transfer.log');
             Route::get('/transfer-log', 'UserReportController@bvlog')->name('reward.log');
             Route::get('report/deposit/log', 'UserReportController@depositHistory')->name('report.deposit');
             Route::get('report/invest/log', 'UserReportController@investLog')->name('report.invest');

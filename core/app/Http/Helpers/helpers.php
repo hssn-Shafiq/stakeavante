@@ -445,12 +445,12 @@ function sendSms($user, $type, $shortCodes = [])
         $template = $sms_template->sms_body;
 
         foreach ($shortCodes as $code => $value) {
-            $template = shortCodeReplacer('{{' . $code . '}}', $value, $template);
+            $template = shortCodeReplacer('{{ ' . $code . ' }}', $value, $template);
         }
         $template = urlencode($template);
 
-        $message = shortCodeReplacer("{{number}}", $user->mobile, $general->sms_api);
-        $message = shortCodeReplacer("{{message}}", $template, $message);
+        $message = shortCodeReplacer("{{ number }}", $user->mobile, $general->sms_api);
+        $message = shortCodeReplacer("{{ message }}", $template, $message);
         $result = @curlContent($message);
     }
 }
@@ -464,15 +464,15 @@ function sendEmail($user, $type = null, $shortCodes = [])
         return;
     }
 
-    $message = shortCodeReplacer("{{name}}", $user->username, $general->email_template);
-    $message = shortCodeReplacer("{{message}}", $email_template->email_body, $message);
+    $message = shortCodeReplacer("{{ name }}", $user->username, $general->email_template);
+    $message = shortCodeReplacer("{{ message }}", $email_template->email_body, $message);
 
     if (empty($message)) {
         $message = $email_template->email_body;
     }
 
     foreach ($shortCodes as $code => $value) {
-        $message = shortCodeReplacer('{{' . $code . '}}', $value, $message);
+        $message = shortCodeReplacer('{{ ' . $code . ' }}', $value, $message);
     }
     $config = $general->mail_config;
 
@@ -495,7 +495,7 @@ function sendPhpMail($receiver_email, $receiver_name, $subject, $message)
     $headers .= "Reply-To: $gnl->sitename <$gnl->email_from> \r\n";
     $headers .= "MIME-Version: 1.0\r\n";
     $headers .= "Content-Type: text/html; charset=utf-8\r\n";
-    @mail($receiver_email, $subject, $message, $headers);
+@mail($receiver_email, $subject, $message, $headers);
 }
 
 
@@ -679,8 +679,8 @@ function sendGeneralEmail($email, $subject, $message, $receiver_name = '')
     if ($general->en != 1 || !$general->email_from) {
         return;
     }
-    $message = shortCodeReplacer("{{message}}", $message, $general->email_template);
-    $message = shortCodeReplacer("{{name}}", $receiver_name, $message);
+    $message = shortCodeReplacer("{{ message }}", $message, $general->email_template);
+    $message = shortCodeReplacer("{{ name }}", $receiver_name, $message);
     $config  = $general->mail_config;
 
     if ($config->name == 'php') {
@@ -743,41 +743,47 @@ function MenusList($id,$value)
         return NULL;
     }
 }
-function treeComission($id,$amount,$type=null)
-{
-    if (isUserExists($id)) {
+if (!function_exists('treeComission')) {
+    function treeComission($userId, $amount, $remark = 'plan_purchase', $recipientId = null)
+    {
         $gnl = GeneralSetting::first();
-        $fromUser = User::find($id);
-        $posUser = User::find($fromUser->added_by);
-        if (!$posUser) {
+        $fromUser = User::find($userId);
+        $recipient = User::find($recipientId);
+
+        if (!$fromUser || !$recipient) {
             return false;
         }
-        if($type=='plan_purchase'){
-        $details = $fromUser->username . ' Subscribed the plan and '.$amount.$gnl->cur_text.' Commission is transfered.';
-        }else{
-         $details = $fromUser->username . ' Invested and '.$amount.$gnl->cur_text.' Commission is transfered.';
-        }
-        if ($posUser->plan_id != 0 && $posUser->plan_type!=5 && $fromUser->plan_type!=5) {
-            $posUser->balance  += $amount;
-            $posUser->total_binary_com += $amount;
-            $posUser->save();
+
+        $details = ($remark == 'plan_purchase')
+            ? $fromUser->username . ' Subscribed the plan and ' . $amount . $gnl->cur_text . ' Commission is transferred.'
+            : $fromUser->username . ' Invested and ' . $amount . $gnl->cur_text . ' Indirect Commission is transferred.';
+
+        if ($recipient->plan_id != 0 && $recipient->plan_type != 5 && $fromUser->plan_type != 5) {
+            $recipient->balance += $amount;
+            if ($remark == 'plan_purchase_indirect') {
+                $recipient->total_indir_com += $amount;
+            } else {
+                $recipient->total_binary_com += $amount;
+            }
+            $recipient->save();
+
             $trxID = getTrx();
-            $posUser->transactions()->create([
+            $recipient->transactions()->create([
                 'amount' => $amount,
                 'charge' => 0,
                 'trx_type' => '+',
                 'details' => $details,
-                'remark' => 'binary_commission',
+                'remark' => $remark == 'plan_purchase_indirect' ? 'indirect_commission' : 'binary_commission',
                 'trx' => $trxID,
-                'post_balance' => getAmount($posUser->balance),
+                'post_balance' => getAmount($recipient->balance),
             ]);
-            /******Send email & SMS*****/
-            /*notify($posUser, 'referral_commission', [
+
+            /*notify($recipient, 'referral_commission', [
                 'trx' => $trxID,
                 'amount' => getAmount($amount),
                 'currency' => $gnl->cur_text,
-                'username' => $posUser->username,
-                'post_balance' => getAmount($posUser->balance),
+                'username' => $recipient->username,
+                'post_balance' => getAmount($recipient->balance),
             ]);*/
         }
     }

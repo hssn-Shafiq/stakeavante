@@ -129,6 +129,11 @@
                         <span class="currency-sign">{{$general->cur_sym}}</span>
 
                     </div>
+                    <div class="numbers">
+                        <span class="amount">{{getAmount($widget['total_indir_com'])}}</span>
+                        <span class="currency-sign">{{$general->cur_sym}}</span>
+
+                    </div>
                     <div class="desciption">
                         <span class="text--small">@lang('Total Tree  Commission')</span>
                     </div>

@@ -3,7 +3,7 @@
 @section('panel')
     <div class="row mb-none-30">
         @foreach ($plans as $data)
-            <div class="col-md-6  mx-auto mb-30">
+            <div class="col-md-6 mx-auto mb-30">
                 <div class="card">
                     <div class="card-body pt-5 pb-5">
                         <div class="pricing-table text-center mb-4">
@@ -17,8 +17,11 @@
                                 <li><i class="fas fa-check bg--success"></i> <span>@lang('Total Level 7')</span> <span
                                         class="icon" data-toggle="modal" data-target="#bvInfoModal"><i
                                             class="fas fa-question-circle"></i></span></li>
-                                <li><i class="fas fa-check bg--success"></i> <span>@lang('Referral Commission'):
+                                <li><i class="fas fa-check bg--success"></i> <span>@lang('Direct Referral Commission'):
                                         {{ getAmount($data->ref_com) }} %</span> <span class="icon" data-toggle="modal"
+                                        data-target="#refComInfoModal"><i class="fas fa-question-circle"></i></span></li>
+                                <li><i class="fas fa-check bg--success"></i> <span>@lang('Indirect Referral Commission'):
+                                        {{ getAmount($data->indir_com) }} %</span> <span class="icon" data-toggle="modal"
                                         data-target="#refComInfoModal"><i class="fas fa-question-circle"></i></span></li>
                                 <li><i class="fas fa-check bg--success"></i> <span>@lang('Monthly Profit'):
                                         {{ getAmount($data->profit) }} %</span> <span class="icon" data-toggle="modal"
@@ -134,7 +137,6 @@
         @endforeach
     </div>
 
-
     <!-- Info Modals -->
     <div class="modal fade" id="bvInfoModal">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -174,13 +176,13 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">@lang('Plan Referral Commission Info')</h5>
+                    <h5 class="modal-title">@lang('Referral Commission Info')</h5>
                     <button type="button" class="close" data-dismiss="modal">
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <h5 class="text-danger">@lang('When you subscribe to a plan, you will earn rewards and your sales will be counted.')</h5>
+                    <h5 class="text-danger">@lang('When you subscribe to a plan, your direct referrer earns a commission based on the Direct Referral Commission percentage, and your indirect referrer (grandparent) earns a commission based on the Indirect Referral Commission percentage.')</h5>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn--dark" data-dismiss="modal">@lang('Close')</button>
@@ -208,7 +210,6 @@
         </div>
     </div>
 @endsection
-
 
 @section('scripts')
     <script>

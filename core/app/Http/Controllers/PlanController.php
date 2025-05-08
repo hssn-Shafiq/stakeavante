@@ -30,7 +30,7 @@ class PlanController extends Controller
     {
         $this->validate($request, [
             'plan_id' => 'required|integer',
-            'mplan' => 'required|in:1,2,3,24', // Validate new plan durations
+            'mplan' => 'required|in:1,2,3,24',
             'membership' => 'required|exists:memberships,id',
         ]);
 
@@ -48,13 +48,12 @@ class PlanController extends Controller
             return back()->withNotify($notify);
         }
 
-        // Set expiry based on mplan
         $expiry = match ($request->mplan) {
             '1' => Carbon::now()->addMonth(1),
             '2' => Carbon::now()->addMonths(2),
             '3' => Carbon::now()->addMonths(3),
             '24' => Carbon::now()->addMonths(24),
-            default => null, // Fallback, though validation ensures this won't happen
+            default => null,
         };
 
         $oldPlan = $user->plan_id;
@@ -83,10 +82,16 @@ class PlanController extends Controller
             'post_balance' => getAmount($user->balance) . ' ' . $gnl->cur_text,
         ]);
 
-        // Referral commission
-        if ($user->added_by > 0) {
+        // Direct referral commission (credit the parent)
+        if ($user->level1_parent) {
             $amount = ceil($membership->price * $plan->ref_com / 100);
-            treeComission($user->id, $amount, 'plan_purchase');
+            treeComission($user->id, $amount, 'plan_purchase', $user->level1_parent);
+        }
+
+        // Indirect referral commission (grandparent)
+        if ($user->level2_parent) {
+            $amount = ceil($membership->price * $plan->indir_com / 100);
+            treeComission($user->id, $amount, 'plan_purchase_indirect', $user->level2_parent);
         }
 
         // Total sale for levels 1 to 7
@@ -105,7 +110,7 @@ class PlanController extends Controller
         $this->validate($request, [
             'plan_id' => 'required|integer',
             'amount' => 'required|numeric|min:5',
-            'mplan' => 'nullable|in:1,2,3,24', // Optional, only for new durations
+            'mplan' => 'nullable|in:1,2,3,24',
         ]);
 
         $plan = Plan::where('id', $request->plan_id)->where('status', 1)->where('is_default', 1)->firstOrFail();
@@ -179,10 +184,16 @@ class PlanController extends Controller
             'post_balance' => getAmount($user->balance) . ' ' . $gnl->cur_text,
         ]);
 
-        // Referral commission
-        if ($user->added_by > 0) {
+        // Direct referral commission (credit the parent)
+        if ($user->level1_parent) {
             $amount = ceil($request->amount * $plan->ref_com / 100);
-            treeComission($user->id, $amount);
+            treeComission($user->id, $amount, 'plan_purchase', $user->level1_parent);
+        }
+
+        // Indirect referral commission (grandparent)
+        if ($user->level2_parent) {
+            $amount = ceil($request->amount * $plan->indir_com / 100);
+            treeComission($user->id, $amount, 'plan_purchase_indirect', $user->level2_parent);
         }
 
         // Total sale for levels 1 to 7
@@ -196,6 +207,17 @@ class PlanController extends Controller
 
         $notify[] = ['success', 'Invested ' . $plan->name . ' Successfully'];
         return redirect()->route('user.home')->withNotify($notify);
+    }
+
+    public function indirectCommissionReport()
+    {
+        $data['page_title'] = "Indirect Commission Report";
+        $data['empty_message'] = 'No indirect commission found';
+        $data['logs'] = Transaction::where('user_id', auth()->id())
+            ->where('remark', 'plan_purchase_indirect')
+            ->latest()
+            ->paginate(config('constants.table.default'));
+        return view($this->activeTemplate . '.user.reports.indir_com', $data);
     }
 
     public function binarySummery()
@@ -243,5 +265,30 @@ class PlanController extends Controller
 
         $notify[] = ['error', 'Tree Not Found or You do not have Permission to view that!!'];
         return redirect()->route('user.my.tree')->withNotify($notify);
+    }
+}
+
+if (!function_exists('treeComission')) {
+    function treeComission($userId, $amount, $remark = 'plan_purchase', $recipientId = null)
+    {
+        $recipient = User::find($recipientId ?: $userId);
+        if ($recipient) {
+            if ($remark === 'plan_purchase_indirect') {
+                $recipient->total_indir_com += $amount;
+            } else {
+                $recipient->total_binary_com += $amount;
+            }
+            $recipient->balance += $amount;
+            $recipient->save();
+
+            $recipient->transactions()->create([
+                'amount' => $amount,
+                'trx_type' => '+',
+                'details' => 'Commission for ' . $remark,
+                'remark' => $remark,
+                'trx' => getTrx(),
+                'post_balance' => getAmount($recipient->balance),
+            ]);
+        }
     }
 }
