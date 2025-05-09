@@ -41,7 +41,7 @@
           <div class="col-lg-5 col-12 position-relative">
             <div class="hero-wrap d-md-block d-none">
               <div class="hero-img">
-                <img src="{{getImage('assets/images/frontend/banner/' . @$banner->data_values->background_image, '770x610')}}" alt="@lang('banner')" class="img-fluid">
+                <img src="assets/images/logoIcon/logo.png"  alt="@lang('banner')" class="img-fluid">
               </div>
               <div class="shape"></div>
             </div>
