@@ -332,11 +332,11 @@ Route::name('user.')->prefix('user')->group(function () {
             Route::get('deposit/history', 'UserController@depositHistory')->name('deposit.history');
             Route::get('/referral-log', 'UserController@referralCom')->name('referral.log');
             Route::get('/binary-log', 'PlanController@binaryCom')->name('binary.log');
-            Route::get('/binary-summery', 'PlanController@binarySummery')->name('binary.summery');
-            Route::get('/referrals', 'PlanController@myRefLog')->name('my.ref');
+            Route::get('/binary-summery', 'PlanController@binarySummery')->name('binary.summery');            Route::get('/referrals', 'PlanController@myRefLog')->name('my.ref');
             Route::get('/tree', 'PlanController@myTree')->name('my.tree');
             Route::get('/tree/{user}', 'PlanController@otherTree')->name('other.tree');
             Route::get('/tree/search', 'PlanController@otherTree')->name('other.tree.search');
+            Route::get('/profit-history', 'UserController@profitHistory')->name('report.profits');
     Route::middleware(['ensurePayment'])->group(function () {
             Route::get('/mark-plan-expire', 'UserController@markPlanExpire')->name('mark-plan-expire');
               //balance transfer

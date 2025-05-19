@@ -12,6 +12,7 @@ use App\Models\WithdrawMethod;
 use App\Models\Withdrawal;
 use App\Models\Membership;
 use App\Models\Plan;
+use App\Models\UserProfit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -24,41 +25,85 @@ class UserController extends Controller
     public function __construct()
     {
         $this->activeTemplate = activeTemplate();
-    }
-    public function home()
-    {
-        $general = GeneralSetting::first();
-        if(auth()->user()){
-            //for free coins
-            $user = auth()->user();
-            $today=Carbon::now()->toDateString();
-            $todayDate=Carbon::parse($today);
-            $previous=Carbon::parse($user->free_coin_date)->toDateString();
-            $previousDate=Carbon::parse($previous);
-            $difference=$previousDate->diffInDays($todayDate);
-            /****end coin work****/
-            $totalDays = Carbon::now()->daysInMonth;
-            $plan = Plan::where('id',auth()->user()->plan_id)->first();
-            $total_invest=auth()->user()->total_invest;
-            if($plan !=null && $total_invest >  0){
-            $user_profit = ceil($total_invest*$plan->profit/100);
-            }else{
-             $user_profit=0;
-            }
-            if($user_profit  > 0 && auth()->user()->plan_expiry > Carbon::now()){
-            $data['daily_profit'] = round($user_profit/$totalDays,2);
-            }else{
-             $data['daily_profit']='NA';
-            }
-        }else{
-          $data['daily_profit']='NA';  
-        }
+    }  public function home()
+{
+    $general = GeneralSetting::first();
+    $data = [];
+    
+    if (auth()->user()) {
+        // For free coins
+        $user = auth()->user();
+        $today = Carbon::now()->toDateString();
+        $todayDate = Carbon::parse($today);
+        $previous = Carbon::parse($user->free_coin_date)->toDateString();
+        $previousDate = Carbon::parse($previous);
+        $difference = $previousDate->diffInDays($todayDate);
+        
+        // Calculate daily profit
+        $plan = Plan::where('id', auth()->user()->plan_id)->first();
+        $total_invest = auth()->user()->total_invest;
+        $todayDateFormatted = Carbon::now()->format('Y-m-d');
 
-        $data['page_title']         = "Dashboard";
-        $data['totalDeposit']       = Deposit::where('user_id', auth()->id())->where('status', 1)->sum('amount');
-        $data['totalWithdraw']      = Withdrawal::where('user_id', auth()->id())->where('status', 1)->sum('amount');
-        $data['total_ref']          = User::where('ref_id', auth()->id())->count();
-        $data['totalTreeUsers']  = User::where('level1_parent', auth()->id())
+        // Check if profit was credited today
+        $profit = UserProfit::getUserProfitForDate(auth()->id(), $todayDateFormatted);
+        
+        if ($profit) {
+            // Profit already credited today, display the credited amount
+            $data['daily_profit'] = round($profit->amount ?? $profit->profit, 2);
+            $data['profit_status'] = 'credited';
+            
+            // Calculate time until next profit (24 hours from last profit)
+            $lastProfitTime = Carbon::parse($profit->created_at);
+            $nextProfitTime = $lastProfitTime->copy()->addDay();
+            $hoursRemaining = Carbon::now()->diffInHours($nextProfitTime, false);
+            $minutesRemaining = Carbon::now()->diffInMinutes($nextProfitTime, false) % 60;
+            
+            $data['next_profit_hours'] = $hoursRemaining;
+            $data['next_profit_minutes'] = $minutesRemaining;
+            $data['next_profit_time'] = $nextProfitTime->format('Y-m-d H:i:s');
+        } else {
+            // No profit credited yet, calculate expected daily profit
+            if ($plan && $total_invest > 0 && auth()->user()->plan_expiry > Carbon::now()) {
+                // Calculate daily profit based on plan's profit percentage
+                $monthly_profit = ceil($total_invest * $plan->profit / 100);
+                $totalDays = Carbon::now()->daysInMonth; // Still using monthly division for consistency
+                $daily_profit = round($monthly_profit / $totalDays, 2);
+                $data['daily_profit'] = $daily_profit;
+                $data['profit_status'] = 'pending'; // Indicates profit not yet credited
+                
+                // For pending profits, show time until midnight when cron will run
+                $tomorrow = Carbon::tomorrow()->startOfDay();
+                $hoursRemaining = Carbon::now()->diffInHours($tomorrow, false);
+                $minutesRemaining = Carbon::now()->diffInMinutes($tomorrow, false) % 60;
+                
+                $data['next_profit_hours'] = $hoursRemaining;
+                $data['next_profit_minutes'] = $minutesRemaining;
+                $data['next_profit_time'] = $tomorrow->format('Y-m-d H:i:s');
+            } else {
+                $data['daily_profit'] = 'NA';
+                $data['profit_status'] = 'inactive'; // No valid plan or investment
+                $data['next_profit_hours'] = null;
+                $data['next_profit_minutes'] = null;
+                $data['next_profit_time'] = null;
+            }
+        }
+        
+        // Store coin-related data
+        $data['coins_date_diff'] = $difference;
+        $data['coins_availed'] = $user->last_free_coins;
+    } else {
+        $data['daily_profit'] = 'NA';
+        $data['profit_status'] = 'inactive';
+        $data['coins_date_diff'] = 0;
+        $data['coins_availed'] = 0;
+    }
+
+    // Dashboard statistics
+    $data['page_title'] = "Dashboard";
+    $data['totalDeposit'] = Deposit::where('user_id', auth()->id())->where('status', 1)->sum('amount');
+    $data['totalWithdraw'] = Withdrawal::where('user_id', auth()->id())->where('status', 1)->sum('amount');
+    $data['total_ref'] = User::where('ref_id', auth()->id())->count();
+    $data['totalTreeUsers'] = User::where('level1_parent', auth()->id())
         ->orWhere('level2_parent', auth()->id())
         ->orWhere('level3_parent', auth()->id())
         ->orWhere('level4_parent', auth()->id())
@@ -66,11 +111,9 @@ class UserController extends Controller
         ->orWhere('level6_parent', auth()->id())
         ->orWhere('level7_parent', auth()->id())
         ->count();
-        $data['coins_date_diff']=$difference;
-        $data['coins_availed']=$user->last_free_coins;
 
-        return view($this->activeTemplate . 'user.dashboard', $data);
-    }
+    return view($this->activeTemplate . 'user.dashboard', $data);
+}
     public function profile()
     {
         $data['page_title'] = "Profile Setting";
@@ -228,10 +271,19 @@ class UserController extends Controller
             return back()->withNotify($notify);
             }
         }
+    }    public function profitHistory()
+    {
+        $page_title = 'Daily Profit History';
+        $empty_message = 'No profit records found.';
+        $profits = UserProfit::where('user_id', auth()->id())
+            ->with('user')
+            ->latest()
+            ->paginate(getPaginate());
+        $general = GeneralSetting::first();
+        
+        return view($this->activeTemplate . 'user.profit_history', compact('page_title', 'empty_message', 'profits', 'general'));
     }
-    /*
-     * Deposit History
-     */
+
     public function depositHistory()
     {
         $page_title = 'Deposit History';

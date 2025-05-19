@@ -12,6 +12,7 @@ use App\Models\UserProfit;
 use App\Models\Reward;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class CronController extends Controller
 {
@@ -142,30 +143,45 @@ class CronController extends Controller
             abort(404);
         }
     }
-    public function giveProfit()
+
+
+ public function giveProfit()
     {
         $totalMonthDays = Carbon::now()->daysInMonth;
         //$totalYearDays = Carbon::now()->daysInYear;
         $gnl = GeneralSetting::first();
         if($this->isCron()){
             if($gnl->profit_status){
-                //get all user with children
+                //get all eligible users with active plans
                 $users = $this->userModel->getAllUsersForProfit();
                 if($users){
                     foreach($users as $user){
-                        $plan = Plan::where('id',$user->plan_id)->first();
-                        $todaydate= Carbon::now()->format('Y-m-d');
-                        $profit = UserProfit::where('user_id',$user->id)->where('created_at','like',$todaydate.'%')->first();
+                        $plan = Plan::where('id', $user->plan_id)->first();
+                        $todaydate = Carbon::now()->format('Y-m-d');
+                        $profit = UserProfit::where('user_id', $user->id)->where('created_at','like', $todaydate.'%')->first();
+                        
+                        // Check if user already received profit today
                         if($profit){
-                        $profitdate=Carbon::parse($profit->created_at)->format('Y-m-d');
-                        }else{
-                            $profitdate=null;
+                            $profitdate = Carbon::parse($profit->created_at)->format('Y-m-d');
+                        } else {
+                            $profitdate = null;
                         }
+                        
+                        // Only give profit once per day
                         if($profit==null || $profitdate!=$todaydate){
-                            $user_profit = ceil($user->total_invest*$plan->profit/100);
-                            if($user_profit  > 0 && $user->plan_expiry > Carbon::now()){
-                            $daily_profit = round($user_profit/$totalMonthDays,2);
-                            $this->sendProfit($user->id,$daily_profit,$todaydate);
+                            // Make sure plan exists
+                            if ($plan) {
+                                // Calculate monthly profit based on investment and plan profit percentage
+                                $user_profit = ceil($user->total_invest * $plan->profit / 100);
+                                
+                                // Check if user has positive profit and their plan hasn't expired
+                                if($user_profit > 0 && $user->plan_expiry > Carbon::now()){
+                                    // Convert monthly profit to daily profit
+                                    $daily_profit = round($user_profit / $totalMonthDays, 2);
+                                    
+                                    // Send today's profit to user
+                                    $this->sendProfit($user->id, $daily_profit, $todaydate);
+                                }
                             }
                         }
                     }
@@ -175,6 +191,9 @@ class CronController extends Controller
             abort(404);
         }
     }
+   
+
+
     public function deleteUnpaid(){
          dd('Deletion of user is disabled');
          echo 'saeed';
@@ -279,34 +298,35 @@ class CronController extends Controller
             'post_balance' => $user->balance,
             'trx' =>  $trx->trx,
         ]);
-    }
-    private function sendProfit($userid,$profit,$todaydate){
+    }  
+      private function sendProfit($userid, $profit, $todaydate)
+    {
         $gnl = GeneralSetting::first();
         $user = User::find($userid);
         $user->balance += $profit;
-        $user->save();
-        //add user profit
+        $user->save();        // Add user profit - recording daily profit distribution
         $uProfit = new UserProfit();
-        $uProfit->user_id=$userid;
+        $uProfit->user_id = $userid;
         $uProfit->profit = $profit;
+        $uProfit->amount = $profit; // Ensure amount field is populated for consistency
         $uProfit->save();
-        //update transaction
+        // Update transaction
         $trx = new Transaction();
         $trx->user_id = $userid;
         $trx->amount = $profit;
         $trx->charge = 0;
         $trx->trx_type = '+';
         $trx->post_balance = $user->balance;
-        $trx->remark = 'bonus_commission';
+        $trx->remark = 'daily_profit';
         $trx->trx = getTrx();
-        $trx->details = 'Paid ' . $profit . ' ' . $gnl->cur_text . ' as profit of '.$todaydate;
+        $trx->details = 'Paid ' . $profit . ' ' . $gnl->cur_text . ' as daily profit for ' . $todaydate;
         $trx->save();
-        notify($user, 'matching_bonus', [
+        notify($user, 'daily_profit', [
             'amount' => $profit,
             'currency' => $gnl->cur_text,
             'paid_bv' => $profit,
             'post_balance' => $user->balance,
-            'trx' =>  $trx->trx,
+            'trx' => $trx->trx,
         ]);
     }
 }

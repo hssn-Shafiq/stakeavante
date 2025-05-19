@@ -1,4 +1,4 @@
-@push('style')
+{{-- @push('style')
 <style type="text/css">
     @import url(http://fonts.googleapis.com/css?family=Lato:100,400);
 .mb20{
@@ -214,4 +214,4 @@ $( document ).ready(function() {
   jQuery('#countdown #sec').html(sec);
 }, 1000); });
 </script>
-@endpush
+@endpush --}}
